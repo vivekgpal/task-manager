@@ -1,24 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+
+import UserContext from "./Context";
+import { useContext } from "react";
+import Nav from "./Nav/Nav";
+import { useState,useEffect } from "react";
 
 function App() {
+
+const[loading,setLoading]=useState(false);
+const[tickets,setTickets] = useState([])
+const[user,setUser] = useState([])
+
+
+
+  useEffect(()=>{
+
+    const fetchData = async ()=>{
+     const res = await fetch('https://api.quicksell.co/v1/internal/frontend-assignment');
+      const data = await res.json();
+        setTickets(data.tickets);
+       setUser(data.users)
+       console.log(data)
+       console.log("tickets" + data.tickets)
+       console.log( data.users)
+      setLoading(true)
+    } 
+    fetchData();
+  },[])
+
+ 
+ 
+  
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+
+    <>
+   { loading ?
+      (
+        <UserContext.Provider value={{ user, tickets }}>
+
+        <Nav  />
+      </UserContext.Provider>) :"loading" }
+    </>
+
   );
 }
 
